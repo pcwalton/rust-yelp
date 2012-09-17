@@ -123,7 +123,7 @@ pub mod search {
             }
 
             Result {
-                businesses: vec::from_mut(dvec::unwrap(businesses))
+                businesses: dvec::unwrap(businesses)
             }
         }
     }
@@ -154,11 +154,11 @@ pub mod search {
         // Turn the parameters into a query.
         // FIXME: This should really be in the standard library.
         let mut query = dvec::DVec();
-        for (&mut params).each_ref |key, value| {
+        for (&params).each_ref |key, value| {
             query.push((copy *key, copy *value));
         }
 
-        let params = vec::from_mut(dvec::unwrap(query));    // FIXME: These should be methods.
+        let params = dvec::unwrap(query);    // FIXME: These should be methods.
         url.query = move params;
 
         debug!("sending request: %s", url::to_str(url));
@@ -166,7 +166,7 @@ pub mod search {
             let text = slurp(url);
 
             // FIXME: This is a particularly ugly line. We need method-ification and auto-ref.
-            let json = result::unwrap(json::from_str(copy *(&text).get_ref()));
+            let json = result::unwrap(json::from_str(*(&text).get_ref()));
 
             Result::from_json(&json)
         }
